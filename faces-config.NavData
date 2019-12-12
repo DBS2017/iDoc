@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="Pages/Area.xhtml" x="1150" y="450" zoom="true"/>
+        <Node id="Pages/Sugerencias.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="Pages/Nosotros.xhtml" x="1150" y="300" zoom="true"/>
+        <Node id="Pages/Contacto.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="welcomePrimefaces.xhtml" x="1650" y="150" zoom="false"/>
+        <Node id="Templates/Default.xhtml" x="150" y="750" zoom="true"/>
+        <Node id="Pages/Reclamacion.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="Pages/Persona.xhtml" x="1400" y="150" zoom="true"/>
+        <Node id="Pages/IncidenciaTipo.xhtml" x="1400" y="300" zoom="true"/>
+        <Node id="Pages/Calendario.xhtml" x="150" y="150" zoom="true"/>
+        <Node id="Pages/index.xhtml" x="400" y="600" zoom="true"/>
+        <Node id="Pages/Login.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="Pages/Manual.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="Pages/empresa.xhtml" x="400" y="750" zoom="true"/>
+        <Node id="Pages/500.html" x="150" y="600" zoom="true"/>
+        <Node id="Pages/Bandeja.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="Pages/Acta.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="Pages/Trabajador.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="Pages/404.html" x="650" y="300" zoom="true"/>
+        <Node id="Pages/Transparencia.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="Pages/tupa.xhtml" x="650" y="150" zoom="true"/>
+        <Node id="Pages/Home.xhtml" x="538" y="366" zoom="true"/>
+        <Node id="Pages/documentoTipo.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="Pages/Ajustes.xhtml" x="150" y="900" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>

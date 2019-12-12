@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Templates/Default.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:param name="tituloPagina" value="Contacto"/>
+
+    <ui:define name="contenidoPagina">
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
+        <div class="card card-w-title ui-fluid">
+            <h1>Contáctanos</h1>
+            <div class="ui-g">
+                <h:form id="frmContacto">
+                    <p:growl life="10000"/>
+
+
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText value="#{contactoC.contacto.subject}"
+                                         requiredMessage="Ingrese Asunto."
+                                         required="true" id="asnt" style="width: 800px"/>
+                            <p:outputLabel value="Asunto" for="@previous"/>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputTextarea value="#{contactoC.contacto.description}"
+                                             requiredMessage="Ingrese Descripción."
+                                             required="true" id="desc"/>
+                            <p:outputLabel value="Descripción" for="@previous"/>
+                        </h:panelGroup>
+                    </div>
+
+                    <h:panelGroup styleClass="mdl-button" >
+                        <p:commandButton actionListener="#{contactoC.enviarMensajeDesarrolladores()}" 
+                                         update="frmContacto" value="Enviar Mensaje"/>
+                        <p:commandButton action="Login" value="Volver" immediate="true"/>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+

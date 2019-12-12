@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/Templates/Default.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:param name="tituloPagina" value="Ajustes"/>
+    <ui:define name="contenidoPagina">
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
+        <div class="p-grid dashboard">
+            <div class="p-col-4 p-lg-4">
+                <div class="userprofile card">
+                    <h:graphicImage id="j_idt86" library="dashboard" name="asset-profile.jpg" class="userprofile-bg"/>
+                    <h:graphicImage id="j_idt87" name="avatar.png" class="userprofile-avatar"/>
+                    <div class="userprofile-name">#{loginC.loginSesion.trabajador.persona.NOMPER} #{loginC.loginSesion.trabajador.persona.APEPATPER} #{loginC.loginSesion.trabajador.persona.APEMATPER}</div>
+                    <div class="userprofile-role">#{loginC.loginSesion.trabajador.area.NOMARE}</div>
+                    <div class="userprofile-role">#{loginC.loginSesion.trabajador.persona.DNIPER}</div>
+                    <h:form id="frmEditarDatos">
+                        <p:growl sticky="true" showDetail="true" life="1000"/>
+                        <div class="userprofile-role">
+                            <p:inplace editor="true" id="inpCorreo" >
+                                <p:ajax event="save" listener="#{loginC.cambiarDatos()}" update="inpCorreo :frmEditarDatos" />
+                                <p:inputText value="#{loginC.loginSesion.trabajador.persona.CORPER}"
+                                             required="true" requiredMessage="Correo necesario"/>
+                            </p:inplace>
+                        </div>
+                        <div class="userprofile-role">
+                            <p:inplace editor="true" id="inpCell" >
+                                <p:ajax event="save" listener="#{loginC.cambiarDatos()}" update="inpCell :frmEditarDatos" />
+                                <p:inputMask value="#{loginC.loginSesion.trabajador.persona.CELPER}" maxlength="9"
+                                             mask="999999999" requiredMessage="Celular Requerido."
+                                             id="dniPer"
+                                             required="false"/>
+                            </p:inplace>
+                        </div>
+                    </h:form>
+                    <h:form id="frmEditarLogin">
+                        <p:growl sticky="true" showDetail="true" life="1000"/>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <p:password value="#{loginC.loginSesion.PSSWLOG}" required="true" id="inptNewPssw" inline="true"
+                                            feedback="true" validatorMessage="No coinciden."
+                                            weakLabel="Mala" goodLabel="Buena" strongLabel="Muy Buena" promptLabel="Ingrese Contraseña."
+                                            match="repetido" placeholder="Nueva Contraseña"
+                                            requiredMessage="Ingrese contraseña"/>
+                            </div>
+                            <div class="ui-g-12">
+                                <p:password id="repetido" value="#{loginC.loginSesion.PSSWLOG}" required="true"
+                                            placeholder="Repetir nueva Contraseña"
+                                            requiredMessage="Vuelva a ingresar la contraseña"/>
+                            </div>
+                            <div class="ui-g-12">
+                                <h:panelGroup styleClass="mdl-button">
+                                    <p:commandButton id="btnEditarLogin"
+                                                     actionListener="#{loginC.editarMio()}"
+                                                     value="Cambiar" update="frmEditarLogin"/>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:form>
+
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

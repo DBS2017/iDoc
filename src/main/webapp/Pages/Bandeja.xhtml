@@ -1,0 +1,784 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Templates/Default.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <ui:param name="tituloPagina" value="Bandeja"/>
+    <ui:define name="contenidoPagina">
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
+        <f:event type="preRenderView" listener="#{transferenciaC.currentExpediente()}"/>
+
+
+
+
+
+        <h:form id="frmTramite">
+            <p:growl  showDetail="true" life="1000"/>
+            <div class="card">
+                <h1>Expediente N°</h1>
+                <h2>#{transferenciaC.currentExp}</h2>
+            </div>
+            <p:panelGrid columns="4" layout="tabular" style="width: 100%">
+                <p:outputLabel value="Tipo de Expediente"/>
+                <p:selectOneRadio value="#{documentoC.transferencia.expediente.TIPEXP}"
+                                  requiredMessage="Seleccione el tipo de expediente" 
+                                  required="true">
+                    <f:selectItem itemLabel="Externo" itemValue="E" />
+                    <f:selectItem itemLabel="Interno" itemValue="I" />
+                    <p:ajax  event="change" update="frmTramite" />
+                </p:selectOneRadio>
+
+                <h:outputText value="Asunto Expediente"/>
+                <p:inputTextarea value="#{documentoC.transferencia.expediente.ASUEXP}" style="width:330px" required="true" requiredMessage="Ingrese el Asunto del expediente.">
+                    <p:ajax event="change" update="frmTramite"
+                            listener="#{documentoC.duplicarInput(documentoC.transferencia.expediente.ASUEXP)}" />
+                </p:inputTextarea>
+
+
+                <h:outputText value="Asunto Documento"/>
+                <p:inputTextarea value="#{documentoC.documento.ASUDOC}" required="true" requiredMessage="Ingrese el Asunto del documento." style="width:330px"/>
+
+                <p:panelGrid >
+                    <h:outputText value="Tipo Documento - " />
+                    <p:commandButton value="Nuevo" type="button" onclick="PF('dlgTipoDocumento').show();" /> 
+                </p:panelGrid>
+
+                <p:selectOneMenu value="#{documentoC.documento.documentotipo.IDTIPDOC}" filter="true" filterMatchMode="contains">
+                    <f:selectItems value="#{documentoTipoC.lstdocumentoTipo}" var="tipoDocumento" 
+                                   itemDisabled="#{tipoDocumento.TIPDOC != documentoC.transferencia.expediente.TIPEXP}"
+                                   itemLabel=" #{tipoDocumento.NOMTIPDOC}" itemValue="#{tipoDocumento.IDTIPDOC}" />
+                </p:selectOneMenu>
+
+                <h:outputText value="Numero de Documento" />            
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:spinner value="#{documentoC.documento.NUMDOC}" required="true" min="1" stepFactor="1" requiredMessage="Ingrese el número del documento." style="width: 75px"/>
+                </h:panelGroup>
+
+                <h:outputText value="Cantidad de folios" />            
+                <h:panelGroup styleClass="md-inputfield" >
+                    <p:spinner value="#{documentoC.documento.NUMFOLDOC}" required="true" min="1" stepFactor="1" requiredMessage="Ingrese la cantidad de folios." style="width: 75px"/>
+                </h:panelGroup>
+
+                <h:outputText value="Tupa" rendered="#{documentoC.transferencia.expediente.TIPEXP == 'E'}"/>
+                <p:selectOneMenu value="#{documentoC.documento.tupa.IDTUP}" filter="true" filterMatchMode="contains"
+                                 rendered="#{documentoC.transferencia.expediente.TIPEXP == 'E'}">
+                    <f:selectItems value="#{tupaC.lstTupa}" var="txtTupa" itemLabel=" #{txtTupa.NOMTUP}" itemValue="#{txtTupa.IDTUP}" />
+                </p:selectOneMenu>
+
+                <p:panelGrid rendered="#{!documentoC.circular}" >
+                    <h:outputText value="Área Receptora - " rendered="#{!documentoC.circular}"/>
+                    <p:commandButton value="Nueva" type="button" onclick="PF('dlgArea').show();" rendered="#{!documentoC.circular}"/> 
+                </p:panelGrid>
+
+                <p:selectOneMenu value="#{documentoC.transferencia.areaReceptora.IDARE}" rendered="#{!documentoC.circular}"
+                                 filter="true" filterMatchMode="contains">
+                    <f:selectItems value="#{areaC.lista}" var="area" 
+                                   itemDisabled="#{area.IDARE == loginC.loginSesion.trabajador.area.IDARE or area.NOMARE == 'Sin derivar'}"
+                                   itemValue="#{area.IDARE}" itemLabel="#{area.NOMARE}"/>
+                </p:selectOneMenu>
+
+                <h:outputText value="Iniciales Jefe" rendered="#{!documentoC.circular}"/>
+                <p:inputText value="#{documentoC.documento.INIJEF}" maxlength="4" rendered="#{!documentoC.circular}" style="width: 60px"/>
+
+                <p:panelGrid rendered="#{documentoC.transferencia.expediente.TIPEXP == 'E'}" >
+                    <h:outputText value="Ciudadano - " rendered="#{documentoC.transferencia.expediente.TIPEXP == 'E'}"/>
+                    <!--                    <p:commandButton style="left:  70px; resize: 60px; size: 60px"  value="Registrar nuevo" 
+                                                         update="frmTramite" -->
+                    <p:commandButton value="Nuevo" type="button" onclick="PF('dlg1').show();" /> 
+
+
+                </p:panelGrid>
+
+                <p:selectOneMenu value="#{documentoC.documento.persona.IDPER}" filter="true" filterMatchMode="contains"
+                                 rendered="#{documentoC.transferencia.expediente.TIPEXP == 'E'}">
+                    <f:selectItems value="#{personaC.lista}" var="persona" 
+                                   itemLabel="#{persona.NOMPER} #{persona.APEPATPER} #{persona.APEMATPER}" itemValue="#{persona.IDPER}"/>
+                </p:selectOneMenu>
+                <p:panelGrid rendered="#{documentoC.transferencia.expediente.TIPEXP == 'E'}" >
+                    <h:outputText value="Empresa - " rendered="#{documentoC.transferencia.expediente.TIPEXP == 'E'}"/>
+                    <p:commandButton value="Nuevo" type="button" onclick="PF('dlg2').show();" /> 
+                </p:panelGrid>
+                <p:selectOneMenu value="#{documentoC.documento.empresa.IDEMP}" filter="true" filterMatchMode="contains"
+                                 rendered="#{documentoC.transferencia.expediente.TIPEXP == 'E'}">
+                    <f:selectItems value="#{empresaC.lstEmpresa}" var="txt" itemLabel=" #{txt.RAZSOCEMP}" itemValue="#{txt.IDEMP}"/>
+                </p:selectOneMenu>
+
+                <h:outputText value="Observación"/>
+                <p:inputTextarea value="#{documentoC.documento.OBSDOC}" style="width:330px"/>
+
+
+
+                <p:selectBooleanButton value="#{documentoC.circular}"
+                                       onLabel="Circular" offLabel="No Circular" 
+                                       rendered="#{documentoC.transferencia.expediente.TIPEXP == 'I'}" >
+                    <p:ajax update="frmTramite" />
+                </p:selectBooleanButton>
+
+
+
+            </p:panelGrid>
+            <p:dataTable id="dtTblArea" var="listaArea" value="#{areaC.lista}"
+                         filteredValue="#{documentoC.listaCircularFiltrado}"
+                         rendered="#{documentoC.transferencia.expediente.TIPEXP == 'I' and documentoC.circular}"
+                         reflow="true" rowKey="#{listaArea.IDARE}"
+                         selection="#{documentoC.listaCircular}"
+                         rowStyleClass="#{listaArea.NOMARE == 'Sin derivar' ? 'ui-helper-hidden' : ''}"
+                         rows="10" emptyMessage="No se encontrarón datos."
+                         paginator="true" scrollable="true" scrollHeight="500"
+                         stickyHeader="true" 
+                         rowsPerPageTemplate="5,10,15,20">
+                <f:facet name="header">
+                    Seleccione las Áreas a derivar
+                </f:facet>          
+                <p:column selectionMode="multiple" style="width:10px;text-align:center"/>
+                <p:column headerText="Nombre Área" filterBy="#{listaArea.NOMARE}" filterMatchMode="contains">
+                    <h:outputText value="#{listaArea.NOMARE}"/>
+                </p:column>    
+
+                <p:column headerText="Iniciales Jefe">
+                    <p:inputText value="#{listaArea.inicialesJefe}" maxlength="4"/>
+                </p:column>
+
+            </p:dataTable>
+
+            <p:commandButton value="Guardar" actionListener="#{documentoC.registrar()}" update="frmTramite" rendered="#{!documentoC.circular}"/>
+            <p:commandButton value="Guardar" actionListener="#{documentoC.registrarCircular()}" update="frmTramite" rendered="#{documentoC.circular}"/>
+
+        </h:form>
+        <p:separator/>
+        <h:form id="form">
+            <p:commandButton id="btnActualizarBandeja" value="Actualizar" update=":bandejaEntrada :bandejaSalida" icon="ui-icon-refresh"
+                             immediate="true" oncomplete="PF('wvListaBandejaEntrada').filter();PF('wvListaBandejaSalida').filter();"
+                             actionListener="#{transferenciaC.listarBandeja()}"/>
+        </h:form>
+        <p:separator/>
+
+        <h:form>
+            <p:inputSwitch value="#{transferenciaC.tipoBandeja}" 
+                           offLabel="Salida" onLabel="Entrada">
+                <p:ajax update=":bandejaEntrada :bandejaSalida" />
+            </p:inputSwitch>            
+        </h:form>
+
+        <p:dialog header="Agregar Empresa" widgetVar="dlg2" width="570px" height="186px" modal="true" draggable="false">
+            <h:form id="FormEmpresa">
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Razón social: " style="max-height: 30px" />
+                    <p:inputText value="#{empresaC.empresa.RAZSOCEMP}" placeholder="Razón social"  maxlength="100" style="width: 360px"/>
+                    <p:outputLabel value="Dirección " style="width: 80px" />
+                    <p:inputText value="#{empresaC.empresa.DIREMP}" placeholder="Dirección"  maxlength="100" style="width: 360px"/>
+                    <p:outputLabel value="RUC: " style="width: 80px"  />
+                    <p:inputText value="#{empresaC.empresa.RUCEMP}" placeholder="RUC" maxlength="11" style="width: 100px">
+                        <p:keyFilter regEx="/[0-9]/"/>
+                    </p:inputText>
+
+                    <p:commandButton value="REGISTRAR" actionListener="#{empresaC.registrarEmpresa()}" 
+                                     update="FormEmpresa :frmTramite"/>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Agregar Área" widgetVar="dlgArea" minHeight="100" modal="true" draggable="false" width="600px" height="28s0px">
+            <h:form id="frmRegistrarArea">
+                <p:growl sticky="true" showDetail="true" keepAlive="1000"/>
+                <p:panelGrid style="width: 100%" columns="2" layout="tabular" class="demo-cards mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing" >
+                    <p:outputLabel value="Nombre Area Perteneciente"/>
+                    <p:selectOneMenu value="#{areaC.area.areaPadre.IDARE}"
+                                     filter="true" filterMatchMode="contains">
+                        <f:selectItem itemValue="#{0}" itemLabel="No pertenece a ningún Área"/>
+                        <f:selectItems value="#{areaC.lista}" var="area" 
+                                       itemDisabled="#{area.NOMARE == 'Sin derivar'}"
+                                       itemValue="#{area.IDARE}" itemLabel="#{area.NOMARE}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Nombre Área"/>
+                    <p:inputText value="#{areaC.area.NOMARE}"  style="width: 60vh" 
+                                 requiredMessage="Nombre Area Requerido."
+                                 required="true" maxlength="100"
+                                 onblur="this.value = this.value.toUpperCase()">
+                        <p:keyFilter regEx='/[\a-z ]/i'/>
+                    </p:inputText>
+                    <p:outputLabel value="Iniciales del Área"/>
+                    <p:inputText value="#{areaC.area.INARE}" placeholder="Opcional"  style="width: 50vh" maxlength="100">
+                        <p:keyFilter regEx='/[\a-z ]/i'/>
+                    </p:inputText>
+                </p:panelGrid>
+                <p:commandButton actionListener="#{areaC.registrar()}" 
+                                 value="GUARDAR" update="frmRegistrarArea :frmTramite "/>
+            </h:form>
+        </p:dialog>
+
+
+        <p:dialog header="Agregar Tipo Documento" widgetVar="dlgTipoDocumento" minHeight="100" modal="true" draggable="false" width="600px" height="28s0px">
+            <h:form id="frmDocumentoTipo">
+                <p:panelGrid columns="2">
+                    <p:outputLabel  value="Tipo de documento: " />
+                    <p:selectOneMenu  value="#{documentoTipoC.documentoTipo.TIPDOC}" >
+                        <f:selectItem itemLabel="Interno" itemValue="I" />
+                        <f:selectItem itemLabel="Externo" itemValue="E" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Nombre: "/>
+                    <p:inputText value="#{documentoTipoC.documentoTipo.NOMTIPDOC}" placeholder="Nombre"  maxlength="100" />
+
+                    <p:commandButton value="REGISTRAR" actionListener="#{documentoTipoC.registrarDocTipo()}" 
+                                     update="frmDocumentoTipo :frmTramite"/>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Agregar Ciudadano" widgetVar="dlg1" minHeight="100" modal="true" draggable="false" width="910px" height="28s0px">
+
+            <div class="card card-w-title ui-fluid">
+                <center><h5 style="color: #193a59" >Registrar Ciudadano</h5></center>
+                <h:form id="frmRegistrarPersona">
+                    <p:growl  showDetail="true" life="1000"/>
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <div class="ui-g-3">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{personaC.persona.APEPATPER}"
+                                                 requiredMessage="Apellido Paterno Requerido."
+                                                 required="true" maxlength="50" id="apePatPer"
+                                                 style="text-transform: uppercase">
+                                        <p:keyFilter regEx='/[\a-z ]/i'/>
+                                    </p:inputText>
+                                    <p:outputLabel value="Apellido Paterno" for="@previous"/>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-3">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{personaC.persona.APEMATPER}"  requiredMessage="Apellido Materno Requerido."
+                                                 id="apeMatPer"
+                                                 required="true"  maxlength="50" style="text-transform: uppercase" >
+                                        <p:keyFilter regEx='/[\a-z ]/i'/>
+                                    </p:inputText>
+                                    <p:outputLabel value="Apellido Materno" for="@previous"/>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-4">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{personaC.persona.NOMPER}" requiredMessage="Nombres Requeridos."
+                                                 id="nomPer"
+                                                 required="true" maxlength="50" style="text-transform: capitalize">
+                                        <p:keyFilter regEx='/[\a-z ]/i'/>
+                                    </p:inputText>
+                                    <p:outputLabel value="Nombres" for="@previous"/>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-2">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputMask value="#{personaC.persona.DNIPER}" maxlength="8" mask="99999999" requiredMessage="DNI Requerido."
+                                                 id="dniPer"
+                                                 required="false"/>
+                                    <p:outputLabel value="DNI" for="@previous"/>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-g-4">
+                                <h:panelGroup styleClass="mdl-button">
+                                    <p:selectOneRadio value="#{personaC.persona.GENPER}" requiredMessage="Seleccione un Sexo."
+                                                      unselectable="false" required="true">
+                                        <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                        <f:selectItem itemLabel="Femenino" itemValue="F" />
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6">
+                                <h:panelGroup>
+                                    <p:selectOneMenu value="#{personaC.persona.ubigeo.CODUBI}" 
+                                                     filter="true" filterMatchMode="contains">
+                                        <f:selectItems value="#{ubigeoC.listaUbigeo}" var="ubigeo"
+                                                       itemValue="#{ubigeo.CODUBI}" 
+                                                       itemLabel="#{ubigeo.DEPUBI}, #{ubigeo.PROVUBI} ,#{ubigeo.DISTUBI}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-2">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputMask value="#{personaC.persona.CELPER}" mask="999999999"
+                                                 id="celper" maxlength="9" />
+                                    <p:outputLabel value="Celular" for="@previous"/>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g-12">
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{personaC.persona.DIRPER}" requiredMessage="Direccion Requerida."
+                                                 id="dirPer"
+                                                 required="true"  maxlength="100" style="text-transform: capitalize" />
+                                    <p:outputLabel value="Dirección" for="@previous"/>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{personaC.persona.CORPER}" requiredMessage="Direccion Requerida."
+                                                 id="corper" maxlength="50" />
+                                    <p:outputLabel value="Correo" for="@previous"/>
+                                </h:panelGroup>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <h:panelGroup styleClass="mdl-button">
+                        <p:commandButton 
+                            id="btnRegistrarPersona"
+                            value="GUARDAR" update="frmRegistrarPersona :frmTramite"
+                            actionListener="#{personaC.registrar()}" />
+                    </h:panelGroup>
+
+                </h:form>
+            </div>
+        </p:dialog>
+
+
+        <h:form id="bandejaEntrada">
+            <p:growl  showDetail="true" life="1000"/>
+            <p:dataTable id="tblBandejaEntrada" reflow="true" 
+                         style="#{transferenciaC.tipoBandeja ? 'display: none' : ''}"
+                         filteredValue="#{transferenciaC.listaBandejaEntradaFiltrada}"
+                         var="bandeja" value="#{transferenciaC.listaBandejaEntrada}" 
+                         sortBy="#{bandeja.expediente.IDEXP}"
+                         rowKey="#{bandeja.IDTRAN}" selectionMode="single" 
+                         selection="#{transferenciaC.selectedTransferencia}"
+                         rows="10" emptyMessage="No se encontrarón datos."
+                         paginator="true" scrollable="false" scrollHeight="500"
+                         stickyHeader="true" widgetVar="wvListaBandejaEntrada"
+                         rowsPerPageTemplate="5,10,15,20">
+                <f:facet name="header">
+                    Bandeja de Entrada
+                </f:facet>  
+
+                <p:column style="width:10vh">
+                    <p:rowToggler />
+                </p:column>
+                <p:column style="width:10vh" headerText="N°" filterBy="#{bandeja.expediente.NUMEXP}" filterMatchMode="contains">
+                    <h:outputText value="#{bandeja.expediente.NUMEXP}"/>
+                </p:column>
+                <p:column headerText="Asunto" filterBy="#{bandeja.expediente.ASUEXP}" filterMatchMode="contains">
+                    <h:outputText value="#{bandeja.expediente.ASUEXP}"/>
+                </p:column>
+                <p:column headerText="Emisor" filterBy="#{bandeja.areaEmisora.NOMARE}" filterMatchMode="contains">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('wvListaBandejaEntrada').filter()" filter="true" filterMatchMode="exact">
+                            <f:selectItem itemLabel="No filtrar" itemValue="#{null}"
+                                          noSelectionOption="true" />
+                            <f:selectItems value="#{areaC.lista}" var="area" itemLabel="#{area.NOMARE}" itemValue="#{area.NOMARE}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{bandeja.areaEmisora.NOMARE}"/>
+                </p:column>
+                <p:column headerText="Derivado">
+                    <h:outputText value="#{bandeja.FECSALTRAN}" >
+                        <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Recibido">
+                    <h:outputText value="#{bandeja.FECRECTRAN}" >
+                        <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Enviado">
+                    <h:outputText value="#{bandeja.areaDerivada.NOMARE}" rendered="#{bandeja.areaDerivada.IDARE!=5 and bandeja.estadoTransferencia=='0'}"/>
+                    <p:selectOneMenu value="#{bandeja.areaDerivada.IDARE}" rendered="#{bandeja.areaDerivada.IDARE==5 and bandeja.estadoTransferencia!='0'}"
+                                     filter="true" filterMatchMode="contains">
+                        <p:ajax listener="#{transferenciaC.derivar(bandeja)}" update=":bandejaEntrada :bandejaSalida"/>
+                        <f:selectItems value="#{areaC.lista}" var="area" itemDisabled="#{area.IDARE == loginC.loginSesion.trabajador.area.IDARE}"
+                                       itemValue="#{area.IDARE}" itemLabel="#{area.NOMARE}"/>
+                    </p:selectOneMenu>
+                </p:column>
+                <p:column style="width:10vh">
+                    <p:triStateCheckbox style="width: 5%;" value="#{bandeja.estadoTransferencia}" disabled="#{bandeja.FECSALTRAN == null}" >
+                        <p:ajax event="change" listener="#{transferenciaC.recepcionarOrRechazar(bandeja)}" update=":bandejaEntrada :bandejaSalida"/>
+                    </p:triStateCheckbox>
+                </p:column>
+                <p:rowExpansion>
+                    <p:panelGrid  columns="4" columnClasses="label,value">
+                        <f:facet name="header">
+                            Expediente
+                        </f:facet>
+                        <h:outputText value="Asunto Documento" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.ASUEXP}" />
+
+                        <h:outputText value="Key" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.KEYEXP}" />
+
+                        <h:outputText value="Tipo" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.TIPEXP}" />
+
+                        <h:outputText value="Estado" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.ESTEXP}" />
+
+                        <h:outputText value="Inicio" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.FECEXP_EN}">
+                            <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                        </h:outputText>
+
+                        <h:outputText value="Fin" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.FECEXP_SAL}">
+                            <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                        </h:outputText>
+
+
+                    </p:panelGrid>
+                    <p:panelGrid  columns="2" columnClasses="label,value">
+                        <f:facet name="header">
+                            Transferencia
+                        </f:facet>
+                        <h:outputText value="Observación" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.OBSTRAN}" />
+
+                        <h:outputText value="Mi observación" style="font-weight: bold"/>
+                        <p:inputTextarea rows="6" cols="33" value="#{bandeja.OBSDER}"  rendered="#{bandeja.OBSDER == null}"/>
+                        <p:commandButton action="#{transferenciaC.recepcionarTransferencia(bandeja)}"  update=":bandejaEntrada :bandejaSalida"
+                                         rendered="#{bandeja.OBSDER == null}"
+                                         style="margin-right:20px;" icon="ui-icon-check" title="Guardar" />
+
+                        <h:outputText value="#{bandeja.OBSDER}"  rendered="#{bandeja.OBSDER != null}"/>
+
+                    </p:panelGrid>
+                </p:rowExpansion>
+            </p:dataTable>
+            <p:contextMenu for="tblBandejaEntrada" rendered="#{not empty transferenciaC.listaBandejaEntrada}">
+                <p:menuitem value="Ver Documentos" icon="ui-icon-search" actionListener="#{transferenciaC.listarDocumentos()}"
+                            oncomplete="PF('wdlgDatosExpediente').show();" update=":frmExpediente"/>
+                <p:menuitem icon="ui-icon-print" value="Reporte" ajax="false" 
+                            actionListener="#{transferenciaC.generarReporte2(transferenciaC.selectedTransferencia.areaReceptora.IDARE)}"/>
+            </p:contextMenu>
+        </h:form> 
+
+        <h:form id="bandejaSalida">
+            <p:growl  showDetail="true" life="1000"/>
+            <p:dataTable id="tblBandejaSalida" reflow="true" 
+                         style="#{!transferenciaC.tipoBandeja ? 'display: none' : ''}"
+                         selection="#{transferenciaC.listaBandejaSeleccionado}" rowKey="#{bandeja.IDTRAN}"
+                         var="bandeja" value="#{transferenciaC.listaBandejaSalida}" 
+                         filteredValue="#{transferenciaC.listaBandejaSalidaFiltrada}"
+                         sortBy="#{bandeja.FECSALTRAN}" sortOrder="descending"
+                         rows="10" emptyMessage="No se encontrarón datos."
+                         paginator="true" scrollable="false" scrollHeight="500"
+                         stickyHeader="true" widgetVar="wvListaBandejaSalida"
+                         rowsPerPageTemplate="5,10,15,20">
+                <f:facet name="header">
+                    Bandeja de Salida
+                    <p:commandButton value="Marcar Salida" actionListener="#{transferenciaC.marcarSalida()}" update=":bandejaEntrada :bandejaSalida"/>
+
+                </f:facet> 
+
+
+                <p:ajax update="tblBandejaSalida" event="toggleSelect" partialSubmit="true"
+                        listener="#{transferenciaC.seleccionaTodo}"/>
+
+
+                <p:column selectionMode="multiple" style="width:10vh;text-align:center"/>
+                <p:column style="width:10vh">
+                    <p:rowToggler />
+                </p:column>
+
+                <p:column style="width:10vh" headerText="N°" filterBy="#{bandeja.expediente.NUMEXP}" filterMatchMode="contains">
+                    <h:outputText value="#{bandeja.expediente.NUMEXP}"/>
+                </p:column>
+                <p:column headerText="Asunto" filterBy="#{bandeja.expediente.ASUEXP}" filterMatchMode="contains">
+                    <h:outputText value="#{bandeja.expediente.ASUEXP}"/>
+                </p:column>
+                <p:column headerText="Receptor" filterBy="#{bandeja.areaReceptora.NOMARE}" filterMatchMode="exact">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('wvListaBandejaSalida').filter()" filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="No filtrar" itemValue="#{null}"
+                                          noSelectionOption="true" />
+                            <f:selectItems value="#{areaC.lista}" var="area" itemLabel="#{area.NOMARE}" itemValue="#{area.NOMARE}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{bandeja.areaReceptora.NOMARE}"/>
+                </p:column>
+                <p:column headerText="Salida" filterBy="#{bandeja.FECSALTRAN}" filterFunction="#{transferenciaC.filterByDate}">
+                    <f:facet name="filter">
+                        <p:calendar pattern="dd/MMM/yyy">
+                            <p:ajax event="dateSelect" oncomplete="PF('wvListaBandejaSalida').filter()" update="tblBandejaSalida" />
+                        </p:calendar>
+                    </f:facet>
+                    <h:outputText value="#{bandeja.FECSALTRAN}" >
+                        <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>               
+                <p:column headerText="Recepcionado">
+                    <h:outputText value="#{bandeja.FECRECTRAN}" >
+                        <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Ver">
+                    <p:commandButton value="ver" icon="ui-icon-search" actionListener="#{transferenciaC.listarDocumentos(bandeja)}"
+                                     oncomplete="PF('wdlgDatosExpedienteS').show();" update=":frmExpedienteS"/>
+                </p:column>
+                <p:column style="width:10vh">
+                    <p:triStateCheckbox disabled="true" style="width: 5%;" value="#{bandeja.estadoTransferencia}"/>
+                </p:column>
+                <p:rowExpansion>
+                    <p:panelGrid  columns="4" columnClasses="label,value">
+                        <f:facet name="header">
+                            Expediente
+                        </f:facet>
+                        <h:outputText value="Asunto Documento" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.ASUEXP}" />
+
+                        <h:outputText value="Key" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.KEYEXP}" />
+
+                        <h:outputText value="Tipo" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.TIPEXP}" />
+
+                        <h:outputText value="Estado" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.ESTEXP}" />
+
+                        <h:outputText value="Inicio" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.FECEXP_EN}">
+                            <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                        </h:outputText>
+
+                        <h:outputText value="Fin" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.expediente.FECEXP_SAL}">
+                            <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                        </h:outputText>
+
+
+                    </p:panelGrid>
+                    <p:panelGrid  columns="2" columnClasses="label,value">
+                        <f:facet name="header">
+                            Transferencia
+                        </f:facet>
+                        <h:outputText value="Observación" style="font-weight: bold"/>
+                        <h:outputText value="#{bandeja.OBSDER}" />
+
+                        <h:outputText value="Mi observación" style="font-weight: bold"/>
+                        <p:inputTextarea rows="6" cols="33" value="#{bandeja.OBSTRAN}"  rendered="#{bandeja.OBSTRAN == null}"/>
+                        <p:commandButton action="#{transferenciaC.recepcionarTransferencia(bandeja)}" update=":bandejaEntrada :bandejaSalida"
+                                         rendered="#{bandeja.OBSTRAN == null}"
+                                         style="margin-right:20px;" icon="ui-icon-check" title="Guardar" />
+
+                        <h:outputText value="#{bandeja.OBSTRAN}"  rendered="#{bandeja.OBSTRAN != null}"/>
+
+                    </p:panelGrid>
+                </p:rowExpansion>
+            </p:dataTable>
+        </h:form>
+
+        <p:dialog id="dlgDatosExpediente" widgetVar="wdlgDatosExpediente" blockScroll="true" modal="true" draggable="false" width="1300px" height="550px"
+                  header="Datos del Expediente" closeOnEscape="true">
+            <h:form id="frmExpediente">
+                <p:growl life="1000"/>
+
+                <p:panelGrid  columns="4" style="width: 100%">
+
+                    <h:outputText value="Número Documento" />            
+                    <h:panelGroup styleClass="md-inputfield" >
+                        <p:spinner value="#{transferenciaC.documento.NUMDOC}" required="true" min="1" stepFactor="1" style="width: 75px" />
+                    </h:panelGroup>
+
+                    <h:outputText value="Iniciales Jefe" />
+                    <p:inputText value="#{transferenciaC.documento.INIJEF}" maxlength="4" style="width: 55px"/>
+
+                    <h:outputText value="Receptor"/>
+                    <p:selectOneMenu value="#{transferenciaC.receptor}" filter="true" filterMatchMode="contains">
+                        <f:selectItems value="#{areaC.lista}" var="area" itemLabel=" #{area.NOMARE}" itemValue="#{area.IDARE}"/>
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Tipo de documento"/>
+                    <p:selectOneMenu value="#{transferenciaC.documento.documentotipo.IDTIPDOC}" filter="true" filterMatchMode="contains" required="true">
+                        <f:selectItems value="#{documentoTipoC.lstdocumentoTipo}" itemDisabled="#{txt.TIPDOC == 'E'}"
+                                       var="txt" itemLabel=" #{txt.NOMTIPDOC}" itemValue="#{txt.IDTIPDOC}"/>
+                    </p:selectOneMenu>
+
+
+                    <h:outputText value="Numero de folios" />            
+                    <h:panelGroup styleClass="md-inputfield" >
+                        <p:spinner value="#{transferenciaC.documento.NUMFOLDOC}" required="true" min="1" stepFactor="1" style="width: 75px" />
+                    </h:panelGroup>
+
+                    <h:outputText value="Asunto"/>
+                    <p:inputTextarea value="#{transferenciaC.documento.ASUDOC}"  style="width: 450px" required="true" requiredMessage="Ingrese el asunto del documento"/>
+
+
+                    <h:outputText value="Observacion"/>
+                    <p:inputTextarea value="#{transferenciaC.documento.OBSDOC}" style="width: 400px"/>
+
+
+                </p:panelGrid>
+                <p:commandButton value="Agregar" actionListener="#{transferenciaC.agregarDocumento()}" update=":frmExpediente"/>
+                <h:form id="frmTblDocumento">
+                    <p:dataTable id="tblDocumento" var="documento"
+                                 value="#{transferenciaC.listaDocumentos}" sortBy="#{documento.FECDOC}" sortOrder="descending"
+                                 filteredValue="#{transferenciaC.listaDocumentosFiltrado}" scrollable="true" scrollHeight="200"
+                                 paginator="true"
+                                 rows="10"
+                                 rowStyleClass="#{documento.OUTPLAZ == '1' ? 'fueraDePlazo' : ''}"
+                                 stickyHeader="true" 
+                                 rowsPerPageTemplate="5,10,15">
+
+                        <p:column style="width:60px">
+                            <p:rowToggler />
+                        </p:column>
+
+                        <p:column headerText="Número" style="width: 90px" filterBy="#{documento.NUMDOC}" filterMatchMode="contains" >
+                            <h:outputText value="#{documento.NUMDOC}"/>
+                        </p:column>
+
+
+
+                        <p:column headerText="Asunto de documento" filterBy="#{documento.ASUDOC}" filterMatchMode="contains" >
+                            <h:outputText value="#{documento.ASUDOC}"/>
+                        </p:column>
+
+                        <p:column headerText="Fecha de Registro" style="width: 250px" >
+                            <h:outputText value="#{documento.FECDOC}">
+                                <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Tipo Documento" style="width: 250px" >
+                            <h:outputText value="#{documento.documentotipo.NOMTIPDOC}"/>
+                        </p:column>
+
+                        <p:column headerText="Área de Registro" style="width: 250px" >
+                            <h:outputText value="#{documento.login.trabajador.area.NOMARE}"/>
+                        </p:column>
+
+                        <p:rowExpansion>
+                            <p:panelGrid columns="4">
+
+                                <h:outputText value="N° de Folios" />
+                                <h:outputText value="#{documento.NUMFOLDOC}"/>
+
+                                <h:outputText value="Cadena"/>
+                                <h:outputText value="#{documento.CADDOC}"/>
+
+                                <h:outputText value="Tupa"/>
+                                <h:outputText value="#{documento.tupa.NOMTUP}"/>
+
+                                <h:outputText value="Plazo"/>
+                                <h:outputText value="#{documento.tupa.PLATUP}"/>
+
+                                <h:outputText value="Transcurrido"/>
+                                <h:outputText value="#{documento.TRANSDOC}"/>
+
+
+                                <h:outputText value="Observacion de documento"/>
+                                <h:outputText value="#{documento.OBSDOC}"/>
+
+                                <h:outputText value="Estado de documento"/>
+                                <h:outputText value="#{documento.ESTDOC}"/>                                
+
+                                <h:outputText value="Trabajador"/>
+                                <h:outputText value="#{documento.login.trabajador.persona.NOMPER}"/>
+
+                                <h:outputText value="Empresa"/>
+                                <h:outputText value="#{documento.empresa.RAZSOCEMP}"/>
+
+                                <h:outputText value="Persona"/>
+                                <h:outputText value="#{documento.persona.NOMPER}"/>
+
+
+                                <p:commandButton immediate="true" ajax="false" value="Exportar PDF" actionListener="#{documentoC.reporte(documento.IDDOC)}"/>
+                            </p:panelGrid>
+                        </p:rowExpansion>
+
+
+                    </p:dataTable>
+                </h:form>
+            </h:form>
+
+        </p:dialog>
+
+        <p:dialog id="dlgDatosExpedienteS" widgetVar="wdlgDatosExpedienteS" modal="true" draggable="false"
+                  header="Datos del Expediente" closeOnEscape="true">
+            <h:form id="frmExpedienteS">
+
+                <h:form id="frmTblDocumento">
+                    <p:dataTable id="tblDocumento" var="documento"
+                                 value="#{transferenciaC.listaDocumentos}" sortBy="#{documento.FECDOC}" sortOrder="descending"
+                                 filteredValue="#{transferenciaC.listaDocumentosFiltrado}"
+                                 paginator="true"
+                                 rows="10" rowStyleClass="#{documento.OUTPLAZ == '1' ? 'fueraDePlazo' : ''}"
+                                 rowsPerPageTemplate="5,10,15">
+
+                        <p:column style="width:60px">
+                            <p:rowToggler />
+                        </p:column>
+
+                        <p:column headerText="Número" style="width: 90px" filterBy="#{documento.NUMDOC}" filterMatchMode="contains" >
+                            <h:outputText value="#{documento.NUMDOC}"/>
+                        </p:column>
+
+
+
+                        <p:column headerText="Asunto de documento" filterBy="#{documento.ASUDOC}" filterMatchMode="contains" >
+                            <h:outputText value="#{documento.ASUDOC}"/>
+                        </p:column>
+
+                        <p:column headerText="Fecha de Registro" style="width: 250px" >
+                            <h:outputText value="#{documento.FECDOC}">
+                                <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Tipo Documento" style="width: 250px" >
+                            <h:outputText value="#{documento.documentotipo.NOMTIPDOC}"/>
+                        </p:column>
+
+                        <p:column headerText="Área de Registro" style="width: 250px" >
+                            <h:outputText value="#{documento.login.trabajador.area.NOMARE}"/>
+                        </p:column>
+
+                        <p:rowExpansion>
+                            <p:panelGrid columns="4">
+
+                                <h:outputText value="N° de Folios" />
+                                <h:outputText value="#{documento.NUMFOLDOC}"/>
+
+                                <h:outputText value="Cadena"/>
+                                <h:outputText value="#{documento.CADDOC}"/>
+
+                                <h:outputText value="Tupa"/>
+                                <h:outputText value="#{documento.tupa.NOMTUP}"/>
+
+                                <h:outputText value="Plazo"/>
+                                <h:outputText value="#{documento.tupa.PLATUP}"/>
+
+                                <h:outputText value="Transcurrido"/>
+                                <h:outputText value="#{documento.TRANSDOC}"/>
+
+                                <h:outputText value="Observacion de documento"/>
+                                <h:outputText value="#{documento.OBSDOC}"/>
+
+                                <h:outputText value="Estado de documento"/>
+                                <h:outputText value="#{documento.ESTDOC}"/>
+
+                                <h:outputText value="Trabajador"/>
+                                <h:outputText value="#{documento.login.trabajador.persona.NOMPER}"/>
+
+                                <h:outputText value="Empresa"/>
+                                <h:outputText value="#{documento.empresa.RAZSOCEMP}"/>
+
+                                <h:outputText value="Persona"/>
+                                <h:outputText value="#{documento.persona.NOMPER}"/>
+
+
+
+                            </p:panelGrid>
+                        </p:rowExpansion>
+
+
+                    </p:dataTable>
+                </h:form>
+            </h:form>
+
+        </p:dialog>
+
+    </ui:define>
+</ui:composition>

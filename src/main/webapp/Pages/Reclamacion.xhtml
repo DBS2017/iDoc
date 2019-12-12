@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Templates/Default.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <ui:param name="tituloPagina" value="Reclamacion"/>
+    <ui:define name="contenidoPagina">
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
+        <f:event type="preRenderView" listener="#{loginC.soloTramite()}"/>
+
+        <h:form id="frmListarReclamacion">
+            <p:dataTable id="dtTblReclamacion"  widgetVar="wvDtTblReclamacion"
+                         value="#{reclamacionC.listaReclamacion}" var="listaReclamacion"
+                         filteredValue="#{reclamacionC.listaReclamacionFiltrado}"
+                         rows="10" emptyMessage="No se encontrarón datos."
+                         rowKey="#{listaReclamacion.IDREC}" selection="#{reclamacionC.seleccionado}"
+                         selectionMode="single"
+                         paginator="true" scrollable="true" scrollHeight="500">
+                <f:facet name="header">
+                    Libro de Reclamaciones
+                    <p:commandButton value="Actualizar" update=":frmListarReclamacion" 
+                                     oncomplete="PF('wvDtTblReclamacion').filter();"
+                                     actionListener="#{reclamacionC.listar()}"/>
+                </f:facet>  
+                <p:column style="width:10vh">
+                    <p:rowToggler />
+                </p:column>
+                <p:column headerText="Ciudadano" filterBy="#{listaReclamacion.IDPER}" filterMatchMode="contains" groupRow="true">
+                    <h:outputText value="#{listaReclamacion.IDPER}"/>
+                </p:column>
+                <p:column headerText="Área" filterBy="#{listaReclamacion.IDARE}" filterMatchMode="contains">
+                    <h:outputText value="#{listaReclamacion.IDARE}" />
+                </p:column>
+
+                <p:column headerText="Celular">
+                    <h:outputText value="#{listaReclamacion.persona.CELPER}"/>
+                </p:column>
+
+                <p:column headerText="Fecha del Reclamo">
+                    <h:outputText value="#{listaReclamacion.FECREC}">
+                        <f:convertDateTime type="time" pattern="dd/MMM/yyyy hh:mm aa" timeZone="COT" />
+                    </h:outputText>
+                </p:column>
+
+                <p:rowExpansion>
+                    <p:panelGrid  columns="2" columnClasses="label,value">
+                        <h:outputText value="Correo" style="font-weight: bolder"/>
+                        <h:outputText value="#{listaReclamacion.persona.CORPER}"/>
+
+
+                        <h:outputText value="Descripción del reclamo/queja" style="font-weight: bold"/>
+                        <h:outputText value="#{listaReclamacion.ASUREC}" />
+                    </p:panelGrid>
+                </p:rowExpansion>
+            </p:dataTable>
+            <p:contextMenu for="dtTblReclamacion" rendered="#{not empty reclamacionC.listaReclamacion}">
+                <p:menuitem value="Responder" icon="ui-icon-email" update=":frmContact" oncomplete="PF('wdlgRespuesta').show();" >
+                    <f:setPropertyActionListener value="#{reclamacionC.seleccionado.persona.CORPER}" target="#{contactoC.contacto.to}"/>
+                    <f:setPropertyActionListener value="Reclamo Nº #{reclamacionC.seleccionado.IDREC}-2019-MDNI / #{reclamacionC.seleccionado.ASUREC}" target="#{contactoC.contacto.subject}"/>
+                </p:menuitem>
+            </p:contextMenu>
+        </h:form> 
+
+        <p:dialog id="dlgRespuesta" widgetVar="wdlgRespuesta"
+                  header="Respuesta" closeOnEscape="true" modal="true" responsive="true" height="200" blockScroll="true" >           
+
+            <h:form id="frmContact">
+                <p:growl life="10000"/>
+                <p:panelGrid  columns="2" style="width: 100%">
+
+                    <h:outputText value="Correo del reclamador"/> 
+                    <h:outputText value="#{reclamacionC.seleccionado.persona.CORPER}"/> 
+
+                    <h:outputText value="Asunto"/> 
+                    <h:outputText value="#{reclamacionC.seleccionado.ASUREC}"/> 
+
+                    <h:outputText value="Escriba su Respuesta"/>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputTextarea value="#{contactoC.contacto.description}"
+                                         required="true" id="desc" style="width: 650px"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+
+
+
+
+                <h:panelGroup styleClass="mdl-button" >
+                    <p:commandButton style="width: 100%" actionListener="#{contactoC.enviarMensaje()}" oncomplete="PF('wdlgRespuesta').hide();"
+                                     update="frmContact" id="btnContactar" value="Enviar Respuesta"/>
+
+                </h:panelGroup>
+            </h:form>
+
+        </p:dialog>
+    </ui:define>
+</ui:composition>

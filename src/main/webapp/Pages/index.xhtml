@@ -1,0 +1,312 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>iDoc</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+
+        <h:outputStylesheet name="theme.css"/>
+        <h:outputStylesheet library="fa"  name="font-awesome.css"/>
+        <h:outputStylesheet name="components.css"/>
+        <h:outputStylesheet library="css"  name="nanoscroller.css"/>
+        <h:outputStylesheet library="css"  name="ripple.css"/>
+        <h:outputStylesheet library="css"  name="grid.css"/>
+        <h:outputStylesheet library="css"  name="layout-blue.css"/>
+        <h:outputStylesheet library="inputswitch"  name="inputswitch.css"/>
+
+        <h:outputScript library="jquery" name="jquery.js" /> 
+        <h:outputScript name="core.js" /> 
+        <h:outputScript name="components.js" /> 
+        <h:outputScript library="jquery" name="jquery-plugins.js" /> 
+        <h:outputScript library="inputswitch" name="inputswitch.js" /> 
+
+        <h:outputScript library="js" name="nanoscroller.js" /> 
+        <h:outputScript library="js" name="layout.js" /> 
+        <h:outputScript library="js" name="ripple.js" /> 
+        <h:outputScript library="chartjs" name="chart.js" /> 
+
+        <script type="text/javascript">
+            if (window.PrimeFaces) {
+                PrimeFaces.settings.locale = 'en_US';
+                PrimeFaces.settings.projectStage = 'Development';
+            }
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                $('#landing-menu-button').on('click', function (e) {
+                    $('#landing-menu').toggleClass('landing-menu-active');
+                    $('#landing-menu-button').toggleClass('landing-menu-active');
+                    if ($('#landing-menu-button').hasClass('landing-menu-active')) {
+                        $('#landing-menu-button').children('i').text('close');
+                    } else {
+                        $('#landing-menu-button').children('i').text('menu');
+                    }
+                    e.preventDefault();
+                });
+
+                $('#landing-menu').on('click', function () {
+                    $('#landing-menu').removeClass('landing-menu-active');
+                    $('#landing-menu-button').removeClass('landing-menu-active');
+                    $('#landing-menu-button').children('i').text('menu');
+                });
+            });
+        </script>
+
+    </h:head>
+
+    <h:body class="landing-body">
+        <div class="landing-wrapper">
+            <div id="header">
+                <div>
+                    <h:graphicImage name="logo-white.svg"/>
+                    <a id="landing-menu-button" href="#">
+                        <div class="landing-menu-button-icon"></div>
+                    </a>
+
+                    <ul id="landing-menu">  
+                        <li>
+                            <h:form>
+                                <p:commandLink value="Ingresar" action="Login?faces-redirect=true" ajax="false" />
+                            </h:form>
+                        </li>  
+                        <li>
+                            <a href="#features">Beneficios</a>
+                        </li>
+                        <li>
+                            <a href="#stats">Porcentaje y VS</a>
+                        </li>
+                        <li>
+                            <a href="#multimedia">Móvil y Web</a>
+                        </li>
+                        <li>
+                            <h:form>
+                                <p:commandLink value="Transparencia" action="Transparencia?faces-redirect=true" ajax="false" />
+                            </h:form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <h:form id="introduction">
+                <div>
+                    <h1>Introduciendo <br />
+                        el único y mejor<br />
+                        sistema de <b>trámite documentario</b> <br />
+                        y <b>registro civil</b> <br />
+                        para una <b>MUNICIPALIDAD</b></h1>
+                </div>
+            </h:form>
+
+            <div id="features">
+                <div>
+                    <h1>Beneficios</h1>
+                    <div class="p-grid">
+                        <div class="p-col-12 p-md-4 feature-box">
+                            <h:graphicImage library="images" name="landing/asset-responsive.jpg" />
+                            <div>
+                                <p>CONTROL</p>
+                                <h3>DE LOS TIEMPOS</h3>
+                                <p>Se controlará mejor los plazos que tiene en proceso de un documento, evitando que la pérdida de tiempo.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-col-12 p-md-4 feature-box">
+                            <h:graphicImage library="images" name="landing/asset-moderndesign.jpg"/>
+                            <div>
+                                <p>TRANSPARENCIA</p>
+                                <h3>DE TUS DOCUMENTOS</h3>
+                                <p>Ahora podrás ver los datos de tus documentos (estado en el que se encuentra, área y funcionario que lo tiene).</p>
+                            </div>
+                        </div>
+
+                        <div class="p-col-12 p-md-4 feature-box">
+                            <h:graphicImage library="images" name="landing/asset-cleancode.jpg"/>
+                            <div>
+                                <p>UBICACIÓN</p>
+                                <h3>DE LOS EXPEDIENTES</h3>
+                                <p>Con una simple consulta al nuevo sistema iDoc podrás ver la ubicación exacta de tu expediente así con todos sus datos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stats">
+                <div>
+                    <div class="p-grid">
+                        <div class="p-col-12 p-md-4">
+                            <div class="stat-box component">
+                                <h:graphicImage library="images" name="landing/icon-components.png"/>
+                                <div id="j_idt20" class="ui-progressbar ui-widget ui-widget-content ui-corner-all ui-progressbar-determinate"><div class="ui-progressbar-value ui-widget-header ui-corner-all" style="display:block;width:70%"></div><div class="ui-progressbar-label"></div></div>
+                                <p><b>100+</b> Almacenamiento de todas las transferencias</p>
+                            </div>
+                        </div>
+
+                        <div class="p-col-12 p-md-4">
+                            <div class="stat-box development">
+                                <h:graphicImage library="images" name="landing/icon-components.png"/>
+                                <div id="j_idt23" class="ui-progressbar ui-widget ui-widget-content ui-corner-all ui-progressbar-determinate"><div class="ui-progressbar-value ui-widget-header ui-corner-all" style="display:block;width:70%"></div><div class="ui-progressbar-label"></div></div>
+                                <p><b>100+</b> Consultas de datos con gran velocidad </p>
+                            </div>
+                        </div>
+
+                        <div class="p-col-12 p-md-4">
+                            <div class=" stat-box coffee">
+                                <h:graphicImage library="images" name="landing/icon-components.png"/>
+                                <div id="j_idt26" class="ui-progressbar ui-widget ui-widget-content ui-corner-all ui-progressbar-determinate"><div class="ui-progressbar-value ui-widget-header ui-corner-all" style="display:block;width:70%"></div><div class="ui-progressbar-label"></div></div>
+                                <p><b>100+</b> Validaciones para evitar errores </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pricing">
+                <div><center>
+                        <h1>Procesos Actual VS Procesos con el Sistema</h1>
+                    </center>
+                    <div class="p-grid">
+                        <div class="p-col-12 p-lg-12 p-xl-6">
+                            <div class="pricing-box">
+                                <div class="pricing-header">
+                                    <h3>Actual</h3>
+                                    <!--<p class="pricing-fee"><b>$0</b>/mo</p>-->
+                                </div>
+
+                                <div class="pricing-content">
+                                    <ul>
+                                        <li><i class="material-icons" style="color: #e53935">close</i> Seguridad</li>
+                                        <li><i class="material-icons" style="color: #e53935">close</i> Tiempo</li>
+                                        <li><i class="material-icons" style="color: #e53935">close</i> Transparencia</li>
+                                        <li><i class="material-icons" style="color: #e53935">close</i> Control</li>
+                                        <li><i class="material-icons" style="color: #e53935">close</i> Busquedas</li>
+                                    </ul>
+                                    <!--<button id="j_idt28" name="j_idt28" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="window.open('\/sapphire\/dashboard.xhtml', '_self')"><span class="ui-button-text ui-c">START TRIAL</span></button>-->
+                                    <script id="j_idt28_s" type="text/javascript">$(function () {
+                                            PrimeFaces.cw("Button", "widget_j_idt28", {id: "j_idt28"});
+                                        });</script>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-col-12 p-lg-12 p-xl-6">
+                            <div class="pricing-box">
+                                <div class="pricing-header">
+                                    <h3>Sistema</h3>
+                                    <!--<p class="pricing-fee"><b>$29</b>/mo</p>-->
+                                </div>
+
+                                <div class="pricing-content">
+                                    <ul>
+                                        <li><i class="material-icons">check</i> Seguridad</li>
+                                        <li><i class="material-icons">check</i> Tiempo</li>
+                                        <li><i class="material-icons">check</i> Transparencia</li>
+                                        <li><i class="material-icons">check</i> Control</li>
+                                        <li><i class="material-icons">check</i> Busquedas</li>
+                                    </ul>
+                                    <!--<button id="j_idt30" name="j_idt30" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="window.open('\/sapphire\/dashboard.xhtml', '_self')"><span class="ui-button-text ui-c">START TRIAL</span></button>-->
+                                    <script id="j_idt30_s" type="text/javascript">$(function () {
+                                            PrimeFaces.cw("Button", "widget_j_idt30", {id: "j_idt30"});
+                                        });</script>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--
+                                                <div class="p-col-12 p-lg-6 p-xl-3">
+                                                    <div class="pricing-box">
+                                                        <div class="pricing-header">
+                                                            <h3>Pro</h3>
+                                                            <p class="pricing-fee"><b>$59</b>/mo</p>
+                                                        </div>
+                        
+                                                        <div class="pricing-content">
+                                                            <ul>
+                                                                <li><i class="material-icons">check</i> Responsive</li>
+                                                                <li><i class="material-icons">check</i> Push Messages</li>
+                                                                <li><i class="material-icons">check</i> 10 Support Tickets</li>
+                                                                <li><i class="material-icons">check</i> Free Shipping</li>
+                                                                <li><i class="material-icons" style="color: #e53935">close</i> Unlimited Space</li>
+                                                            </ul><button id="j_idt32" name="j_idt32" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="window.open('\/sapphire\/dashboard.xhtml', '_self')"><span class="ui-button-text ui-c">START TRIAL</span></button><script id="j_idt32_s" type="text/javascript">$(function () {
+                                                                    PrimeFaces.cw("Button", "widget_j_idt32", {id: "j_idt32"});
+                                                                });</script>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+                        <!--
+                                                <div class="p-col-12 p-lg-6 p-xl-3">
+                                                    <div class="pricing-box">
+                                                        <div class="pricing-header">
+                                                            <h3>Enterprise</h3>
+                                                            <p class="pricing-fee"><b>$249</b>/mo</p>
+                                                        </div>
+                        
+                                                        <div class="pricing-content">
+                                                            <ul>
+                                                                <li><i class="material-icons">check</i> Responsive</li>
+                                                                <li><i class="material-icons">check</i> Push Messages</li>
+                                                                <li><i class="material-icons">check</i> 10 Support Tickets</li>
+                                                                <li><i class="material-icons">check</i> Free Shipping</li>
+                                                                <li><i class="material-icons">check</i> Unlimited Space</li>
+                                                            </ul><button id="j_idt34" name="j_idt34" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="window.open('\/sapphire\/dashboard.xhtml', '_self')"><span class="ui-button-text ui-c">START TRIAL</span></button><script id="j_idt34_s" type="text/javascript">$(function () {
+                                                                    PrimeFaces.cw("Button", "widget_j_idt34", {id: "j_idt34"});
+                                                                });</script>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+                    </div>
+                </div>
+            </div>
+
+            <div id="multimedia">
+                <div>
+                    <h1>Multimedia</h1>
+                    <div class="p-grid">
+                        <div class="p-col-12 p-md-8 multimedia-content1">
+                            <h:graphicImage library="images" name="landing/idoc.png"/>
+                            <div>
+                                <h3>Aplicación WEB </h3>
+                                <p>Un sistema creado para agilizar el proceso del trámite de los documentos.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-col-12 p-md-4 multimedia-content2">
+                            <h:graphicImage library="images" name="landing/ionic.png"/>
+                            <div>
+                                <h3>Aplicación móvil </h3>
+                                <p>Creado para que el ciudadano pueda consultar expedientes , tupa y/o realizar reclamos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="footer">
+                <div>
+                    <div class="p-grid">
+                        <div class="p-col-12 p-md-2">
+                            <h:graphicImage name="logo-white.svg"/>
+                        </div>
+
+                        <div class="p-col-12 p-md-10 footer-social">
+                            <a href="#">
+                                <h:graphicImage library="images" name="landing/icon-twitter.png"/>
+                            </a>
+                            <a href="#">
+                                <h:graphicImage library="images" name="landing/icon-facebook.png"/>
+                            </a>
+                            <a href="#">
+                                <h:graphicImage library="images" name="landing/icon-github.png"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>

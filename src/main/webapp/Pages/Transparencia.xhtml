@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:h="http://xmlns.jcp.org/jsf/html"  xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+
+        <h:outputStylesheet name="theme.css"/>
+        <h:outputStylesheet library="fa"  name="font-awesome.css"/>
+        <h:outputStylesheet name="components.css"/>
+        <h:outputStylesheet library="css"  name="nanoscroller.css"/>
+        <h:outputStylesheet library="css"  name="ripple.css"/>
+        <h:outputStylesheet library="css"  name="grid.css"/>
+        <h:outputStylesheet library="css"  name="layout-blue.css"/>
+        <h:outputStylesheet library="inputswitch"  name="inputswitch.css"/>
+
+        <h:outputScript library="jquery" name="jquery.js" /> 
+        <h:outputScript name="core.js" /> 
+        <h:outputScript name="components.js" /> 
+        <h:outputScript library="jquery" name="jquery-plugins.js" /> 
+        <h:outputScript library="inputswitch" name="inputswitch.js" /> 
+
+        <h:outputScript library="js" name="nanoscroller.js" /> 
+        <h:outputScript library="js" name="layout.js" /> 
+        <h:outputScript library="js" name="ripple.js" /> 
+        <h:outputScript library="chartjs" name="chart.js" /> 
+
+        <script type="text/javascript">
+            if (window.PrimeFaces) {
+                PrimeFaces.settings.locale = 'en_US';
+                PrimeFaces.settings.projectStage = 'Development';
+            }
+        </script>      
+        <title>Transparencia</title>
+    </h:head>
+    <h:body class="main-body">
+
+        <p:growl><p:autoUpdate/></p:growl>
+
+        <div class="layout-container layout-menu-light layout-topbar-skyline layout-menu-horizontal layout-top-large">
+            <div class="layout-top">
+
+                <div class="layout-topbar">
+                    <a id="layout-menubutton" href="#" class="layout-menubutton">
+                        <div class="layout-menubutton-icon"></div>
+                    </a>
+
+                    <div class="layout-topbar-grid">
+                        <!--<div class="layout-topbar-grid-column layout-topbar-grid-column-fixed">-->
+                        <!--<a class="layout-logo">-->
+                        <h:graphicImage name="logo-white.svg"/>
+                        <!--</a>-->
+                        <!--</div>-->
+                        <div class="layout-topbar-grid-column">
+
+                            <div id="layout-menu-container" class="layout-menu-container">
+                                <div id="layout-nano" class="nano">
+                                    <div class="nano-content sidebar-scroll-content">
+                                        <div class="layout-menu-wrapper">
+                                            <h:form id="menuform" >
+                                                <input type="hidden" name="menuform" value="menuform" />
+                                                <p:growl id="messages"/>
+                                                <ul id="menuform:j_idt18" class="layout-menu">
+                                                    <li id="menuform:sr_dashboard" role="menuitem">
+                                                    <p:commandLink actionListener="#{transparenciaC.setOpcion('1')}" ajax="false" class="ripplelink" >
+                                                        <i class="material-icons">compare_arrows</i>
+                                                        <span class="menuitem-text">Trámite</span>
+                                                    </p:commandLink>
+                                                    </li>                                                    
+                                                    <li role="menuitem">
+                                                    <p:commandLink actionListener="#{transparenciaC.setOpcion('2')}"  ajax="false" class="ripplelink" >
+                                                        <i class="material-icons">book</i>
+                                                        <span class="menuitem-text">TUPA</span>
+                                                    </p:commandLink>
+                                                    </li>                                                    
+                                                    <li role="menuitem">
+                                                    <p:commandLink action="Home?faces-redirect=true" ajax="false" class="ripplelink" >
+                                                        <i class="material-icons">home</i>
+                                                        <span class="menuitem-text">Home</span>
+                                                    </p:commandLink>
+                                                    </li>                                                    
+
+                                                </ul>
+                                                <script id="menuform:j_idt18_s"
+                                                        type="text/javascript">$(function () {
+                                                                PrimeFaces.cw("Sapphire", "widget_menuform_j_idt18", {id: "menuform:j_idt18", closeDelay: 300});
+                                                            });</script>
+                                            </h:form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="layout-topbar-separator"></div>
+
+            </div>
+
+            <div class="layout-content">
+                <!-- CONTENIDO -->
+
+
+                <h:panelGroup layout="block" id="frmTransferencia" 
+                              rendered="#{transparenciaC.opcion == '1' ? true : false}">
+                    <div class="card card-w-title">
+                        <h1>Consulta de Trámite Documentario</h1>
+                        <h:form id="frmTransparencia">
+                            <p:growl life="1000"/>
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <div class="ui-g-6">
+                                        <div class="ui-g-4 ui-m-4">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText value="#{transparenciaC.transparencia.KEYEXP}" required="true"
+                                                             maxlength="10" 
+                                                             requiredMessage="Ingrese el Número del Documento"/>
+                                                <p:outputLabel value="KEY" for="@previous"/>
+                                            </h:panelGroup>
+                                        </div>
+                                        <div class="ui-g-1 ui-m-1" >
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText value="#{transparenciaC.transparencia.NUMEXP}"   required="true" 
+                                                             validatorMessage="Sólo Letra" maxlength="6" onkeyup="this.value = this.value.toUpperCase()"
+                                                             requiredMessage="Ingrese su Código por favor.">
+                                                    <!--                                            <p:keyFilter regEx='/[\a-z ]/i'/>-->
+                                                </p:inputText>
+                                                <p:outputLabel value="NUMEXP" for="@previous"/>
+                                            </h:panelGroup>                       
+                                            <p:outputLabel value="#{transparenciaC.documentoTransparencia.NUMEXP = transparenciaC.transparencia.NUMEXP}" style="display: none"/>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-6">
+                                        <h:panelGroup styleClass="mdl-button" id="demo">
+                                            <p:commandButton actionListener="#{transparenciaC.listarTransparencia()}" value="Consultar"
+                                                             update="frmTransparencia :frmListarTransparencia :frmListarDocumentoTransparencia"/>
+                                        </h:panelGroup>
+
+                                        <p:selectBooleanButton value="#{transparenciaC.tipoConsulta}"
+                                                               onLabel="DOCUMENTOS" offLabel="TRAZABILIDAD" style="width:150px" 
+                                                               onIcon="ui-icon-document" offIcon="ui-icon-folder-collapsed">
+                                            <p:ajax update="frmTransparencia :frmListarTransparencia "/>
+                                            <p:ajax update="demo" />
+                                            <p:ajax update="frmListarDocumentoTransparencia"/>
+                                            <!--<p:ajax update="frmTransparencia :frmListarDocumentoTransparencia"/>-->
+                                        </p:selectBooleanButton>  
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+
+                        <h:form id="frmListarTransparencia">
+                            <p:dataTable id="dtTblTransparencia"  value="#{transparenciaC.listaTransparencia}" 
+                                         var="listaTransparencia"
+                                         rows="10" emptyMessage="No se encontrarón datos." 
+                                         reflow="true"
+                                         style="#{transparenciaC.tipoConsulta ? 'display: none' : ''}"
+                                         paginator="true" scrollable="true" scrollHeight="500"
+                                         rowsPerPageTemplate="5,10,15,20">
+
+                                <f:facet name="header">
+                                    Ventana Única de Trámite
+                                </f:facet>
+
+                                <p:column headerText="Área Emisora">
+                                    <h:outputText
+                                        value="#{listaTransparencia.emisor.NOMARE}" />
+                                </p:column>
+
+                                <p:column headerText="Fecha de Salida">
+                                    <h:outputText
+                                        value="#{listaTransparencia.FECINGTRAN}">
+                                        <f:convertDateTime pattern="dd/MMM/yyyy" />
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Área Receptora">
+                                    <h:outputText
+                                        value="#{listaTransparencia.receptor.NOMARE}"/>
+                                </p:column>
+
+                                <p:column headerText="Fecha de Recepción">
+                                    <h:outputText
+                                        value="#{listaTransparencia.FECRECTRAN}">
+                                        <f:convertDateTime pattern="dd/MMM/yyyy" />
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Observación Trámite">
+                                    <h:outputText
+                                        value="#{listaTransparencia.OBSTRAN}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+
+                        <h:form id="frmListarDocumentoTransparencia">
+                            <p:dataTable id="dtTblDocumentoTransparencia"  value="#{transparenciaC.listaDocumentoT}" 
+                                         var="listaDocumentoTransparencia"
+                                         rows="10" emptyMessage="No se encontrarón datos." 
+                                         reflow="true"
+                                         style="#{!transparenciaC.tipoConsulta ? 'display: none' : ''}"
+                                         paginator="true" scrollable="true" scrollHeight="500"
+                                         rowsPerPageTemplate="5,10,15,20">
+
+                                <f:facet name="header">
+                                    Ventana Única de Trámite
+                                </f:facet>
+
+                                <p:column headerText="Asunto">
+                                    <h:outputText
+                                        value="#{listaDocumentoTransparencia.ASUDOC}" />
+                                </p:column>
+                                <p:column headerText="Número de folio">
+                                    <h:outputText value="#{listaDocumentoTransparencia.NUMFOLDOC}" />
+                                </p:column>
+
+                                <p:column headerText="Observación">
+                                    <h:outputText value="#{listaDocumentoTransparencia.OBSDOC}" />
+                                </p:column>
+                                <p:column headerText="Estado del documento" style="width: 120px" >
+                                    <h:outputText value="#{listaDocumentoTransparencia.ESTDOC eq '1' ? 'Activo' :  ''}"/>
+                                    <h:outputText value="#{listaDocumentoTransparencia.ESTDOC eq '2' ? 'Proceso' :  ''}"/>                    
+                                    <h:outputText value="#{listaDocumentoTransparencia.ESTDOC eq '0' ? 'Derivado' :  'Proceso'}"/> 
+                                </p:column>
+
+                                <p:column headerText="Fecha de entrada"  style="width: 187px"  >
+                                    <h:outputText value="#{listaDocumentoTransparencia.FECDOC}">
+                                        <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </div>
+                </h:panelGroup>
+
+                <h:panelGroup layout="block" id="frmTupa" 
+                              rendered="#{transparenciaC.opcion == '2' ? true : false}">
+                    <div class="card card-w-title">
+                        <h1>Consulta de Procedimientos TUPA</h1>
+                        <p:dataTable id="rpTupa"  value="#{transparenciaC.listaTupaTemp}" 
+                                     var="listaTupa"
+                                     rows="500" emptyMessage="No se encontrarón datos." 
+                                     reflow="true"        
+                                     rowStyleClass="#{listaTupa.tupa.NOMTUP == 'SIN TUPA' ? 'ui-helper-hidden' : ''}"
+                                     paginator="true" scrollable="true" scrollHeight="5000"
+                                     >
+
+
+                            <f:facet name="header">
+                                Procedimientos TUPA
+                            </f:facet>
+
+                            <p:column headerText="Asunto" groupRow="true"  style="width: 300PX">
+                                <h:outputText value="#{listaTupa.tupa.NOMTUP}" style="font-weight: 900" />
+                            </p:column>
+                            <p:column headerText="Requerimiento"  style="width: 300PX">
+                                <h:outputText value="#{listaTupa.NOMREQ}" style="font-weight: bold"/>
+                            </p:column>
+                            <p:column headerText="Área" groupRow="true" style="width: 150PX">
+                                <h:outputText value="#{listaTupa.tupa.area.NOMARE}" style="column-count: auto" />
+                            </p:column>
+                            <p:column headerText="Plazo" groupRow="true" style="width: 70PX">
+                                <h:outputText value="#{listaTupa.tupa.PLATUP} dia(s)" style=" outline-color: #26C6DA"/>
+                            </p:column>
+                            <p:column headerText="Precio" groupRow="true" style="width: 70PX">
+                                <h:outputText value="S/. #{listaTupa.tupa.PRETUP}" style="font-weight: initial"/>
+                            </p:column>
+
+
+                        </p:dataTable>
+
+                    </div>
+                </h:panelGroup>
+
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <h:graphicImage library="outputpanel" name="images/loading.gif"/>
+                </p:dialog>
+
+            </div>
+
+
+            <div class="layout-footer">
+                <div class="p-grid">
+                    <div class="p-col">
+                        <!--<h:graphicImage name="logo-white.svg"/>-->
+                        <div class="layout-footer-appname">iDoc - Valle Grande</div>
+                    </div>
+                    <div class="p-col p-col-align-center">
+                        <span class="ui-icon ui-icon-copyright"></span>
+                        <span>All Rights Reserved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </h:body>
+</html>

@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Templates/Default.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <ui:param name="tituloPagina" value="Sugerencias"/>
+    <ui:define name="contenidoPagina">
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
+
+        <div class="card card-w-title ui-fluid">
+            <h:form id="frmRegistrarSugerencia">
+                <p:inputTextarea value="#{sugerenciaC.sugerencia.SUG}" cols="100" placeholder="Ingrese su sugerencia aquí, los desarrolladores lo solucionarán."/>
+                <p:commandButton value="Sugerir" actionListener="#{sugerenciaC.registrar()}"
+                                 styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only secondary"/>
+            </h:form>
+            <h:form id="form">
+
+                <p:commandButton id="btnActualizarSugerencia" icon="ui-icon-refresh"
+                                 value="Actualizar" immediate="true"
+                                 process="@this,:frmSugerencia" update=":frmSugerencia"
+                                 actionListener="#{sugerenciaC.listar()}" />
+            </h:form>
+        </div>
+
+        <h:form id="frmSugerencia">
+            <h:panelGroup >
+                <div class="ui-g-12">
+                    <p:repeat value="#{sugerenciaC.sugerencias}" var="sugerencia">
+                        <div class="ui-g-2">
+
+                            <h:panelGrid columns="2" class="card ui-messages-#{sugerencia.ESTSUG eq '0' ? 'warn': 
+                                                                               sugerencia.ESTSUG eq '1' ? 'info' : 'fatal'}">
+                                <h:panelGrid columns="1">
+                                    <h:outputText value="#{sugerencia.SUG}" style="font-size: 3vh"/>
+
+                                    <h:outputText value="#{sugerencia.login.trabajador.persona.APEPATPER}
+                                                  #{sugerencia.login.trabajador.persona.APEMATPER}, 
+                                                  #{sugerencia.login.trabajador.persona.NOMPER}"
+                                                  style="font-size: 2vh"/>
+
+                                </h:panelGrid>
+                                 <h:panelGrid columns="1"/>
+                                <h:panelGrid columns="2">
+                                <p:triStateCheckbox  value="#{sugerencia.ESTSUG}">
+                                    <p:ajax event="change" listener="#{sugerenciaC.editar(sugerencia)}"/>
+                                </p:triStateCheckbox>
+                                <p:commandButton icon="ui-icon-trash" actionListener="#{sugerenciaC.eliminar(sugerencia)}"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </div>
+                    </p:repeat>
+                </div>
+            </h:panelGroup>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+

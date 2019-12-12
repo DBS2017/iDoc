@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Templates/Default.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:param name="tituloPagina" value="Calendario"/>
+
+    <ui:define name="contenidoPagina">
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>        
+        <h:form id="frmCalendario">
+            <p:commandButton value="Actualizar" actionListener="#{documentoC.generarCalendario()}" update="frmCalendario"/>
+            <h:panelGrid columnClasses="value">
+                <p:schedule id="schedule" value="#{documentoC.calendario}" widgetVar="myschedule">
+                    <p:ajax event="eventSelect" listener="#{documentoC.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                </p:schedule>
+            </h:panelGrid>
+
+            <p:dialog widgetVar="eventDialog" header="Documento" showEffect="clip" hideEffect="clip">
+                <p:panelGrid id="eventDetails" columns="2">
+
+                    <p:outputLabel value="Asunto" />
+                    <h:outputText value="#{documentoC.evento.title}" />
+
+                    <p:outputLabel value="Número" />
+                    <h:outputText value="#{documentoC.seleccionado.NUMDOC}" />
+
+                    <p:outputLabel value="TUPA" />
+                    <h:outputText value="#{documentoC.seleccionado.tupa.NOMTUP}" />
+
+                    <p:outputLabel value="Plazo" />
+                    <h:outputText value="#{documentoC.seleccionado.tupa.PLATUP}" />
+
+                    <p:outputLabel value="Registro" />
+                    <h:outputText value="#{documentoC.seleccionado.FECDOC}">
+                        <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                    </h:outputText>
+
+                    <p:outputLabel value="Entrega" />
+                    <h:outputText value="#{documentoC.seleccionado.entrega}" >
+                        <f:convertDateTime pattern="dd/MMM/yyyy HH:mm:ss" />
+                    </h:outputText>
+
+
+                </p:panelGrid>
+            </p:dialog> 
+        </h:form>
+    </ui:define>
+</ui:composition>
+

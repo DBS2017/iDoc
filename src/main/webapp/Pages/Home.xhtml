@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Templates/Default.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:param name="tituloPagina" value="Home"/>
+
+    <ui:define name="contenidoPagina">
+        <f:event type="preRenderView" listener="#{loginC.seguridadSesion()}"/>
+
+        <p:fragment rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'R'? true : false}">
+            <div class="ui-g dashboard">
+                <ui:repeat value="#{dashboardC.listaCantidadesActa}" var="cantidadActas">
+                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                        <h:form>
+                            <p:outputPanel class="ui-g card colorbox colorbox-#{cantidadActas.acta.TIPACTA} panel aumentar">
+
+                                <div class="ui-g-4">
+
+                                    <i class="material-icons">
+                                        #{cantidadActas.acta.TIPACTA eq '1' ?
+                                          'child_friendly':
+                                          cantidadActas.acta.TIPACTA eq '2' ? 
+                                          'favorite_border': 'airline_seat_flat'}
+                                    </i>
+                                </div>
+                                <div class="ui-g-8">
+                                    <span class="colorbox-name">#{cantidadActas.acta.TIPACTA eq '1' ?
+                                                                  'Partidas de Nacimiento':
+                                                                  cantidadActas.acta.TIPACTA eq '2' ? 
+                                                                  'Actas de Matrimonio': 'Actas de Defunción'}
+                                    </span>
+                                    <span class="colorbox-count">#{cantidadActas.cantidad}</span>
+                                </div>
+                            </p:outputPanel>
+                        </h:form>
+                    </div>
+                </ui:repeat>
+            </div>
+        </p:fragment>
+
+
+
+
+        <p:fragment rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'T'? true : false}">
+            <div class="ui-g dashboard">
+                <div class="p-col-12 p-lg-6">
+                    <div class="p-grid controlpanel">
+
+                        <div class="p-col-12">
+                            <div class="location card">
+                                <div class="location-content">
+
+                                    <div class="p-grid">
+                                        <div class="p-col-fixed p-col-align-top">
+                                            <div class="icon-container">
+                                                <i class="material-icons">gavel</i>
+                                            </div>
+                                        </div>
+                                        <div class="p-col">
+                                            <div class="location-name">#{dashboardC.listaCantidadesTupa[0].cantidadTU}</div>
+                                            <div class="location-subtitle">Procedimientos en el TUPA</div>
+                                        </div>
+                                        <div class="p-col-fixed p-col-align-top">
+                                            <div class="icon-container">
+                                                <i class="material-icons">cloud_download</i>
+                                            </div>
+                                        </div>
+                                        <div class="p-col">
+                                            <div class="location-name">#{transferenciaC.listaBandejaEntrada.size()}</div>
+                                            <div class="location-subtitle">Entrada</div>
+                                        </div>
+                                        <div class="p-col-fixed p-col-align-top">
+                                            <div class="icon-container">
+                                                <i class="material-icons">cloud_upload</i>
+                                            </div>
+                                        </div>
+                                        <div class="p-col">
+                                            <div class="location-name">#{transferenciaC.listaBandejaSalida.size()}</div>
+                                            <div class="location-subtitle">Salida</div>
+                                        </div>                                        
+                                    </div>
+                                    <p:fragment rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'R'}">
+                                        <p:pieChart model="#{dashboardC.pieModel}"/>
+                                    </p:fragment>
+                                </div>                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p:fragment>
+
+
+        <p:fragment>
+            <div>
+
+                <!--                Aquí los charts xd-->
+                <p:fragment rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'T'}">
+                    <div class="card">
+                        <p:lineChart model="#{dashboardC.derivaciones}" style="width: 100%; height: 500px;"/>
+                    </div>
+                    <div class="card">
+                        <p:barChart model="#{dashboardC.derivacionesArea}" style="width: 100%; height: 500px;"/>
+                    </div>
+                    <div class="card">
+                        <p:lineChart model="#{dashboardC.reclamaciones}" style="width: 100%; height: 500px;"/>
+                    </div>
+<!--                    <div class="card">
+                        <p:pieChart model="{dashboardC.pieModel}" style="width: 100%; height: 500px;"/>
+                    </div>-->
+                </p:fragment>
+            </div>
+        </p:fragment>
+    </ui:define>
+</ui:composition>
+
+
+
+
+<!--<p:fragment rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'T'? true : false}">
+            <div class="ui-g dashboard">
+                <ui:repeat value="#{dashboardC.listaCantidadesTupa}" var="cantidadesDocumento" >
+                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                        <h:form>
+                            <p:outputPanel class="ui-g card colorbox colorbox-#{cantidadesDocumento.cantidadT} panel aumentar">
+
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                    <div class="ui-g card colorbox colorbox-1">
+                                        <div class="ui-g-5">
+                                            <i class="material-icons">description</i>
+                                        </div>
+
+                                        <div class="ui-g-7">
+
+                                            <span class="colorbox-name">Documentos Tramitados
+                                            </span>
+                                            <span class="colorbox-name">#{cantidadesDocumento.cantidadT}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </p:outputPanel>
+                        </h:form>
+                    </div>
+                </ui:repeat>
+            </div>
+        </p:fragment>-->

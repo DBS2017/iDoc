@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+
+        <h:outputStylesheet name="theme.css"/>
+        <h:outputStylesheet library="fa"  name="font-awesome.css"/>
+        <h:outputStylesheet name="components.css"/>
+        <h:outputStylesheet library="css"  name="nanoscroller.css"/>
+        <h:outputStylesheet library="css"  name="ripple.css"/>
+        <h:outputStylesheet library="css"  name="grid.css"/>
+        <h:outputStylesheet library="css"  name="layout-blue.css"/>
+        <h:outputStylesheet library="inputswitch"  name="inputswitch.css"/>
+
+        <!--<h:outputScript library="jquery" name="jquery.js" />--> 
+        <h:outputScript name="core.js" /> 
+        <h:outputScript name="components.js" /> 
+        <!--<h:outputScript library="jquery" name="jquery-plugins.js" />--> 
+        <h:outputScript library="inputswitch" name="inputswitch.js" /> 
+
+        <h:outputScript library="js" name="nanoscroller.js" /> 
+        <h:outputScript library="js" name="layout.js" /> 
+        <h:outputScript library="js" name="ripple.js" /> 
+        <h:outputScript library="chartjs" name="chart.js" /> 
+
+        <script type="text/javascript">
+            if (window.PrimeFaces) {
+                PrimeFaces.settings.locale = 'en_US';
+                PrimeFaces.settings.projectStage = 'Development';
+            }
+        </script>
+
+        <title>#{tituloPagina} - iDoc</title>
+
+    </h:head>
+    <h:body>
+
+        <div class="layout-container layout-menu-light layout-topbar-skyline layout-menu-vertical layout-top-large">
+            <div class="layout-top">
+
+                <div class="layout-topbar">
+                    <a id="layout-menubutton" href="#" class="layout-menubutton">
+                        <div class="layout-menubutton-icon"></div>
+                    </a>
+
+                    <div class="layout-topbar-grid">
+                        <!--<div class="layout-topbar-grid-column layout-topbar-grid-column-fixed">-->
+                        <!--<a class="layout-logo">-->
+                        <h:graphicImage name="logo-white.svg"/>
+                        <!--</a>-->
+                        <!--</div>-->
+                        <div class="layout-topbar-grid-column">
+
+                            <div id="layout-menu-container" class="layout-menu-container">
+                                <div id="layout-nano" class="nano">
+                                    <div class="nano-content sidebar-scroll-content">
+                                        <div class="layout-menu-wrapper">
+                                            <h:form id="menuform" >
+                                                <input type="hidden" name="menuform" value="menuform" />
+                                                <ul id="menuform:j_idt18" class="layout-menu">
+                                                    <li id="menuform:sr_dashboard" role="menuitem">
+                                                    <p:commandLink action="Home?faces-redirect=true" ajax="false" class="ripplelink" >
+                                                        <i class="material-icons">assessment</i>
+                                                        <span class="menuitem-text">Dashboard</span>
+                                                    </p:commandLink>
+                                                    </li>                                                    
+                                                    <li role="menuitem">
+                                                    <p:commandLink action="Calendario?faces-redirect=true" ajax="false" class="ripplelink" >
+                                                        <i class="material-icons">assessment</i>
+                                                        <span class="menuitem-text">Pendientes</span>
+                                                    </p:commandLink>
+                                                    </li>                                                    
+
+                                                    <li id="menuform:sr_components" role="menuitem">
+                                                        <a href="#" class="ripplelink">
+                                                            <i class="material-icons"></i>
+                                                            <span
+                                                                class="menuitem-text">Maestros</span>
+                                                            <i class="material-icons layout-submenu-toggler">&#xE313;</i>
+                                                        </a>
+                                                        <div class="layout-submenu-container">
+                                                            <ul role="menu" class="layout-submenu">
+
+                                                                <li role="menuitem">
+                                                                <p:commandLink action="Persona?faces-redirect=true" ajax="false" class="ripplelink" >
+                                                                    <i class="material-icons">group</i>
+                                                                    <span class="menuitem-text">Ciudadanos</span>
+                                                                </p:commandLink>
+                                                                </li>
+
+                                                                <li role="menuitem">
+                                                                <p:commandLink action="empresa?faces-redirect=true" ajax="false" class="ripplelink" 
+                                                                               rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'T'}">
+                                                                    <i class="material-icons">account_balance</i>
+                                                                    <span class="menuitem-text">Empresa</span>
+                                                                </p:commandLink>
+                                                                </li>
+
+                                                                <li role="menuitem">
+                                                                <p:commandLink action="documentoTipo?faces-redirect=true" ajax="false" class="ripplelink" 
+                                                                               rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'T'}">
+                                                                    <i class="material-icons">library_books</i>
+                                                                    <span class="menuitem-text">Tipos de Documento</span>
+                                                                </p:commandLink>
+                                                                </li>
+
+
+
+                                                                <li role="menuitem">
+                                                                <p:commandLink action="IncidenciaTipo?faces-redirect=true" ajax="false" class="ripplelink" 
+                                                                               rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'R'}">
+                                                                    <i class="material-icons">gavel</i>
+                                                                    <span class="menuitem-text">Tipos de Incidencia</span>
+                                                                </p:commandLink>
+                                                                </li>
+                                                                <li role="menuitem">
+                                                                <p:commandLink action="tupa?faces-redirect=true" ajax="false" class="ripplelink" 
+                                                                               rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'T'}" >
+                                                                    <i class="material-icons">book</i>
+                                                                    <span class="menuitem-text">Tupa</span>
+                                                                </p:commandLink>
+                                                                </li>
+
+                                                                <a href="#" class="ripplelink">
+                                                                    <i class="material-icons">work</i>
+                                                                    <span
+                                                                        class="menuitem-text">Gestión</span>
+                                                                    <i class="material-icons layout-submenu-toggler">&#xE313;</i>
+                                                                </a>
+                                                                <div class="layout-submenu-container">
+
+                                                                    <ul role="menu" class="layout-submenu">
+
+                                                                        <li role="menuitem">
+                                                                        <p:commandLink action="Trabajador?faces-redirect=true" ajax="false" class="ripplelink" 
+                                                                                       rendered="#{loginC.loginSesion.TIPLOG.charAt(0) == 'S' 
+                                                                                                   or loginC.loginSesion.TIPLOG.charAt(0) == 'A'}" >
+                                                                            <i class="material-icons">perm_identity</i>
+                                                                            <span class="menuitem-text">Colaborador</span>
+                                                                        </p:commandLink>
+                                                                        </li>
+
+                                                                        <li role="menuitem">
+                                                                        <p:commandLink action="Area?faces-redirect=true" ajax="false" class="ripplelink" 
+                                                                                       rendered="#{loginC.loginSesion.TIPLOG.charAt(0) == 'S' 
+                                                                                                   and loginC.loginSesion.TIPLOG.charAt(1) == 'T'}" >
+                                                                            <i class="material-icons">room</i>
+                                                                            <span class="menuitem-text">Área</span>
+                                                                        </p:commandLink>
+                                                                        </li>
+
+
+                                                                    </ul>
+                                                                </div>
+                                                            </ul>
+                                                        </div>
+
+                                                    </li>
+
+                                                    <li role="menuitem">
+                                                        <a href="#" class="ripplelink">
+                                                            <i class="material-icons">cached</i>
+                                                            <span
+                                                                class="menuitem-text">Transacciones</span>
+                                                            <i class="material-icons layout-submenu-toggler">&#xE313;</i>
+                                                        </a>
+
+                                                        <div class="layout-submenu-container">
+                                                            <ul role="menu" class="layout-submenu">
+                                                                <li role="menuitem">
+                                                                <p:commandLink action="Bandeja?faces-redirect=true" ajax="false" class="ripplelink" >
+                                                                    <i class="material-icons">compare_arrows</i>
+                                                                    <span class="menuitem-text">Bandeja</span>
+                                                                    <span class="menuitem-badge">#{transferenciaC.listaBandejaEntrada.size()}</span>
+                                                                    <span class="menuitem-badge">#{transferenciaC.listaBandejaSalida.size()}</span>
+                                                                </p:commandLink>
+                                                                </li>
+
+                                                                <li role="menuitem">
+                                                                <p:commandLink action="Acta?faces-redirect=true" ajax="false" class="ripplelink"
+                                                                               rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'R'}">
+                                                                    <i class="material-icons">chrome_reader_mode</i>
+                                                                    <span class="menuitem-text">Hechos Vitales</span>
+                                                                </p:commandLink>
+                                                                </li>
+
+                                                                <li role="menuitem">
+                                                                <p:commandLink action="Reclamacion?faces-redirect=true" ajax="false" class="ripplelink" rendered="#{loginC.loginSesion.TIPLOG.charAt(1) == 'T'}">
+                                                                    <i class="material-icons">book</i>
+                                                                    <span class="menuitem-text">Reclamaciones</span>
+                                                                </p:commandLink>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <script id="menuform:j_idt18_s"
+                                                        type="text/javascript">$(function () {
+                                                                PrimeFaces.cw("Sapphire", "widget_menuform_j_idt18", {id: "menuform:j_idt18", closeDelay: 300});
+                                                            });</script>
+                                            </h:form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <h:form id="menu" class="layout-topbar-grid-column layout-topbar-grid-column-fixed">
+                            <a id="profile-menu-button" class="profile-menu-button">
+                                <h:graphicImage id="avatar" name="avatar.png"/>
+                                <p:tooltip for="avatar" position="bottom">
+                                    <h:panelGrid columns="2">
+                                        <p:outputLabel value="Apellidos"/>
+                                        <h:outputText value="#{loginC.loginSesion.trabajador.persona.APEPATPER} 
+                                                      #{loginC.loginSesion.trabajador.persona.APEMATPER}"/>
+                                        <p:outputLabel value="Nombres"/>
+                                        <h:outputText value="#{loginC.loginSesion.trabajador.persona.NOMPER}" />
+                                        <p:outputLabel value="DNI"/>
+                                        <h:outputText value="#{loginC.loginSesion.trabajador.persona.DNIPER}"/>
+                                        <p:outputLabel value="Área"/>
+                                        <h:outputText value="#{loginC.loginSesion.trabajador.area.NOMARE}"/>
+                                    </h:panelGrid>
+                                </p:tooltip>
+                            </a>
+                            <ul id="layout-profile-menu" class="layout-profile-menu">
+                                <li>
+                                <p:commandLink action="Ajustes?faces-redirect=true" styleClass="ripplelink" ajax="false">
+                                    <i class="material-icons">account_circle</i>
+                                    <span>Mi Perfil</span>
+                                </p:commandLink>
+                                </li>
+                                <li>
+                                <p:commandLink action="Contacto?faces-redirect=true" styleClass="ripplelink" ajax="false"
+                                               immediate="true">
+                                    <i class="material-icons">mail</i>
+                                    <span>Contacto</span>
+                                </p:commandLink>
+                                </li>
+                                <li>
+                                <p:commandLink action="Manual?faces-redirect=true" styleClass="ripplelink" ajax="false">
+                                    <i class="material-icons">assignment</i>
+                                    <span>Manual</span>
+                                </p:commandLink>
+                                </li>
+                                <li>
+                                <p:commandLink action="Sugerencias?faces-redirect=true" styleClass="ripplelink" ajax="false">
+                                    <i class="material-icons">comment</i>
+                                    <span>Sugerencias</span>
+                                </p:commandLink>
+                                </li>
+                                <li>
+                                <p:commandLink styleClass="ripplelink" ajax="false"
+                                               actionListener="#{loginC.cerrarSesion()}">
+                                    <i class="material-icons">lock</i>
+                                    <span>Salir</span>
+                                </p:commandLink>
+                                </li>
+                            </ul>
+                        </h:form>
+                    </div>
+                </div>
+
+                <div class="layout-topbar-separator"></div>
+
+            </div>
+
+            <div class="layout-content">
+                <!-- CONTENIDO -->
+
+                <p:growl widgetVar="mensajeSockets" life="200" showDetail="true" globalOnly="true" sticky="true"/>
+                <h:outputScript library="websockets" name="cliente.js" />
+                <ui:insert name="contenidoPagina"/>
+
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <h:graphicImage library="outputpanel" name="images/loading.gif"/>
+                </p:dialog>
+
+            </div>
+
+
+            <div class="layout-footer">
+                <div class="p-grid">
+                    <div class="p-col">
+                        <!--<h:graphicImage name="logo-white.svg"/>-->
+                        <div class="layout-footer-appname">iDoc - Valle Grande</div>
+                    </div>
+                    <div class="p-col p-col-align-center">
+                        <span class="ui-icon ui-icon-copyright"></span>
+                        <span>All Rights Reserved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>
+
